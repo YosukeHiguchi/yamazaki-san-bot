@@ -67,7 +67,7 @@ foreach ($events as $event) {
             if (isInConversation($user_id)) {
                 inConversation($user_id, $text);
             } else {
-                sendText($user_id, '[山崎さんBOT] 山崎さんと会話をするには、「山崎さんと話す」って打って下さいね！')
+                sendText($user_id, '[山崎さんBOT] 山崎さんと会話をするには、「山崎さんと話す」と送信して下さい！');
             }
             break;
     }
