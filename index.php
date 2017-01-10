@@ -137,6 +137,10 @@ function inConversation($user_id, $msg) {
 function finishConversation($token) {
     global $dbh;
 
+    if (!$token) {
+        return;
+    }
+
     $strSQL = "SELECT user_id FROM user WHERE token = :token";
     $stmt = $dbh->prepare($strSQL);
     $stmt->bindParam(':token', $token);
