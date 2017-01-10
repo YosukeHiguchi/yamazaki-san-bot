@@ -10,7 +10,7 @@ try {
     echo "test";
     exit;
 }
-var_dump($dbh);
+var_dump($dbh->errorInfo());
 
 function addUserId($user_id) {
     global $dbh;
