@@ -27,4 +27,7 @@ function getUserId($id) {
     $stmt = $dbh->prepare($strSQL);
     $stmt->bindParam(':id', $id);
     $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $result['user_id'];
 }
