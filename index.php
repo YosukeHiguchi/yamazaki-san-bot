@@ -69,7 +69,7 @@ function beginConversation($user_id) {
     global $dbh;
 
     // Duplicate Check
-    $strSQL = "SELECT count(*) FROM user WHERE user_id = :user_id";
+    $strSQL = "SELECT count(*) AS cnt FROM user WHERE user_id = :user_id";
     $stmt = $dbh->prepare($strSQL);
     $stmt->bindParam(':user_id', $user_id);
     $stmt->execute();
@@ -77,7 +77,7 @@ function beginConversation($user_id) {
     sendText($user_id, var_export($result, true));
 
     // Add or update user
-    if ($result['count'] > 0) {
+    if ($result['cnt'] > 0) {
         $strSQL = "UPDATE user SET waiting_flg = 1, start_time = CURRENT_TIMESTAMP WHERE user_id = :user_id";
         $stmt = $dbh->prepare($strSQL);
         $stmt->bindParam(':user_id', $user_id);
