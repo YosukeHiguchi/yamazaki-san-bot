@@ -74,7 +74,6 @@ function beginConversation($user_id) {
     $stmt->bindParam(':user_id', $user_id);
     $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        sendText($user_id, 'working');
 
     // Add or update user
     if ($result['count'] > 0) {
@@ -88,7 +87,7 @@ function beginConversation($user_id) {
         $stmt->bindParam(':user_id', $user_id);
         $stmt->execute();
     }
-
+sendText($user_id, 'working');
     // Connect if there is someone in waitinglist
     $waiting_user = getWaitingUser();
     if (count($waiting_user) > 0) {
