@@ -121,7 +121,7 @@ function inConversation($user_id, $msg) {
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($result === false) {
-        sendText($user_id, '[山崎さんBOT] エラーが発生しました。会話を終了します。')
+        sendText($user_id, '[山崎さんBOT] エラーが発生しました。会話を終了します。');
         finishConversation();
         return;
     }
