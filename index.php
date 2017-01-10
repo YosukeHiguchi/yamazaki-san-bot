@@ -39,7 +39,7 @@ foreach ($events as $event) {
     }
 
     if (!($event instanceof \LINE\LINEBot\Event\MessageEvent\TextMessage)) {
-        $invalid_type_msg = '[山崎さんBOT] 現在はテキストしか対応しておりません。';
+        $invalid_type_msg = '[山崎さんBOT] 現在はテキストしか対応してません！';
         $bot->replyText($event->getReplyToken(), $invalid_type_msg);
         continue;
     }
@@ -50,20 +50,24 @@ foreach ($events as $event) {
     switch ($text) {
         case '山崎さんと話す':
             if (isInConversation($user_id)) {
-                sendText($user_id, '[山崎さんBOT] 山崎さんと会話中です。');
+                sendText($user_id, '[山崎さんBOT] 山崎さんと会話中ですよ！');
             } else {
                 beginConversation($user_id);
             }
             break;
         case '山崎さんと話すのをやめる':
-            finishConversation(getToken($user_id));
+            $token = getToken($user_id);
+            if ($token) {
+                finishConversation($token);
+            } else {
+                sendText($user_id, '[山崎さんBOT] 現在会話をしてません。');
+            }
             break;
         default:
             if (isInConversation($user_id)) {
                 inConversation($user_id, $text);
             } else {
-                // do nothing
-                $bot->replyText($event->getReplyToken(), $text);
+                sendText($user_id, '[山崎さんBOT] 山崎さんと会話をするには、「山崎さんと話す」って打って下さいね！')
             }
             break;
     }
@@ -109,7 +113,7 @@ function beginConversation($user_id) {
         sendText($waiting_user['user_id'], $msg);
         sendText($user_id, $msg);
     } else {
-        $msg = '[山崎さんBOT] 山崎さんを検索中です。検索は10分後に自動的にオフになります。';
+        $msg = '[山崎さんBOT] 山崎さんを検索中。検索は10分後に自動的にオフになります。';
         sendText($user_id, $msg);
     }
 }
@@ -153,7 +157,7 @@ function finishConversation($token) {
     $stmt->execute();
 
     foreach ($results as $result) {
-        sendText($result['user_id'], '[山崎さんBOT] 会話を終了しました。');
+        sendText($result['user_id'], '[山崎さんBOT] 会話を終了しました！');
     }
 }
 
