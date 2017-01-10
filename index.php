@@ -179,7 +179,7 @@ function getWaitingUser($user_id = NULL) {
     global $dbh;
 
     $strSQL  = "SELECT * FROM user WHERE waiting_flg = 1 AND start_time > CURRENT_TIMESTAMP + INTERVAL -10 MINUTE";
-    $strSQL .= " AND LENGTH(token) = 0 ";
+    $strSQL .= " AND (token = '' OR token IS NULL)";
     if (!is_null($user_id)) {
         $strSQL .= " AND user_id != :user_id ";
     }
@@ -199,16 +199,20 @@ function getWaitingUser($user_id = NULL) {
     return $result;
 }
 
-function getUserId($id) {
+function isWaiting($user_id) {
     global $dbh;
 
-    $strSQL = "SELECT user_id FROM user WHERE id = :id";
+    $strSQL  = "SELECT * FROM user WHERE waiting_flg = 1 AND start_time > CURRENT_TIMESTAMP + INTERVAL -10 MINUTE";
+    $strSQL .= " AND (token = '' OR token IS NULL) AND user_id = :user_id";
     $stmt = $dbh->prepare($strSQL);
-    $stmt->bindParam(':id', $id);
+    $stmt->bindParam(':user_id', $user_id);
     $stmt->execute();
-    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if ($stmt->rowCount() > 0) {
+        return true;
+    }
 
-    return $result['user_id'];
+    return false;
 }
 
 function sendText($to, $msg) {
