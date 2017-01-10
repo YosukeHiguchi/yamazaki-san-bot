@@ -89,7 +89,7 @@ function beginConversation($user_id) {
     }
 
     // Connect if there is someone in waitinglist
-    $waiting_user = getWaitingUser();
+    $waiting_user = getWaitingUser($user_id);
     if (count($waiting_user) > 0) {
         $token = createToken();
 
@@ -172,12 +172,24 @@ function getToken($user_id) {
     return $result['token'];
 }
 
-function getWaitingUser() {
+/**
+ *  @param user_id User ID which should be excluded from searching
+ */
+function getWaitingUser($user_id = NULL) {
     global $dbh;
 
     $strSQL  = "SELECT * FROM user WHERE waiting_flg = 1 AND start_time > CURRENT_TIMESTAMP + INTERVAL -10 MINUTE";
-    $strSQL .= " AND LENGTH(token) = 0 ORDER BY start_time ASC";
-    $stmt = $dbh->query($strSQL);
+    $strSQL .= " AND LENGTH(token) = 0 ";
+    if (!is_null($user_id)) {
+        $strSQL .= " AND user_id != :user_id ";
+    }
+    $strSQL .= "ORDER BY start_time ASC";
+
+    $stmt = $dbh->prepare($strSQL);
+    if (!is_null($user_id)) {
+        $stmt->bindParam(':user_id', $user_id);
+    }
+    $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     sendText('Ud13cb22d3933c35428b74fd31c29da35', var_export($result, true));
 
