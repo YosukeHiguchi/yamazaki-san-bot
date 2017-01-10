@@ -1,0 +1,8 @@
+<?php
+
+define('CHANNEL_ACCESS_TOKEN', 'token');
+define('CHANNEL_SECRET', 'secret');
+
+define('DB_DSN', 'dsn');
+define('DB_USERNAME', 'username');
+define('DB_PASSWORD', 'password');
