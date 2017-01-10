@@ -56,7 +56,7 @@ foreach ($events as $event) {
             }
             break;
         case '山崎さんと話すのをやめる':
-            finishConversation();
+            finishConversation(getToken($user_id));
             break;
         default:
             if (isInConversation($user_id)) {
