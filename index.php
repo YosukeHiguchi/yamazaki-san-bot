@@ -59,8 +59,11 @@ foreach ($events as $event) {
             $token = getToken($user_id);
             if ($token) {
                 finishConversation($token);
+            } else if (isWaiting($user_id)) {
+                cancelWaiting();
+                sendText($user_id, '[山崎さんBOT] 山崎さんと話すのをやめました。');
             } else {
-                sendText($user_id, '[山崎さんBOT] 現在会話をしてません。');
+                sendText($user_id, '[山崎さんBOT] 現在会話をしてませんよ！');
             }
             break;
         default:
@@ -235,6 +238,15 @@ function isWaiting($user_id) {
     }
 
     return false;
+}
+
+function cancelWaiting($user_id) {
+    global $dbh;
+
+    $strSQL = "UPDATE user SET waiting_flg = 0, token = '' WHERE user_id = :user_id";
+    $stmt = $dbh->prepare($strSQL);
+    $stmt->bindParam(':user_id', $user_id);
+    $stmt->execute();
 }
 
 function sendText($to, $msg) {
