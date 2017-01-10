@@ -74,7 +74,6 @@ function beginConversation($user_id) {
     $stmt->bindParam(':user_id', $user_id);
     $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
-    sendText($user_id, var_export($result, true));
 
     // Add or update user
     if ($result['cnt'] > 0) {
@@ -180,6 +179,7 @@ function getWaitingUser() {
     $strSQL .= " AND DATALENGTH(token) = 0 ORDER BY start_time ASC";
     $stmt = $dbh->query($strSQL);
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    sendText('Ud13cb22d3933c35428b74fd31c29da35', var_export($result, true));
 
     if ($result === false) {
         return array();
