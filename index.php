@@ -21,7 +21,7 @@ try {
 
 $textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder('hey whats up');
 $user_id = getUserId($_REQUEST['id']);
-$bot->pushMessage($user_id, $textMessageBuilder);
+$response = $bot->pushMessage($user_id, $textMessageBuilder);
 var_dump($user_id);var_dump($_REQUEST);
 echo $response->getHTTPStatus() . ' ' . $response->getRawBody();
 
