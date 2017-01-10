@@ -14,7 +14,6 @@ try {
 function addUserId($user_id) {
     global $dbh;
 
-    $user_id = '%'.$user_id.'%';
     $strSQL = "INSERT INTO test (user_id) VALUES (:user_id)";
     $stmt = $dbh->prepare($strSQL);
     $stmt->bindParam(':user_id', $user_id);
