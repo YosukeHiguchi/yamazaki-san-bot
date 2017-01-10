@@ -74,7 +74,7 @@ function beginConversation($user_id) {
     $stmt->bindParam(':user_id', $user_id);
     $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
-    sendText($user_id, var_dump($result).'blah');
+    sendText($user_id, var_export($result));
 
     // Add or update user
     if ($result['count'] > 0) {
@@ -122,8 +122,8 @@ function inConversation($user_id, $msg) {
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($result === false) {
-        sendText($user_id, '[山崎さんBOT] エラーが発生しました。会話を終了します。');
-        finishConversation();
+        sendText($user_id, '[山崎さんBOT] エラーが発生しました。');
+        finishConversation($token);
         return;
     }
 
@@ -131,12 +131,12 @@ function inConversation($user_id, $msg) {
     sendText($dest_user_id, $msg);
 }
 
-function finishConversation($user_id) {
+function finishConversation($token) {
     global $dbh;
 
-    $strSQL = "UPDATE user SET token = '', waiting_flg = 0 WHERE user_id = :user_id";
+    $strSQL = "UPDATE user SET token = '', waiting_flg = 0 WHERE token = :token";
     $stmt = $dbh->prepare($strSQL);
-    $stmt->bindParam(':user_id', $user_id);
+    $stmt->bindParam(':token', $token);
     $stmt->execute();
 
     sendText($user_id, '[山崎さんBOT] 会話を終了しました。');
