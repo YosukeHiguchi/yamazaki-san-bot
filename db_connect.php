@@ -16,5 +16,5 @@ function addUserId($user_id) {
 
     $strSQL = "INSERT INTO test (user_id) VALUES ('?')";
     $stmt = $dbh->prepare($strSQL);
-    $dbh->execute([$user_id]);
+    $stmt->execute([$user_id]);
 }

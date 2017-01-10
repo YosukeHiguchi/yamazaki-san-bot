@@ -3,10 +3,6 @@ require_once('config.php');
 require_once('db_connect.php');
 require_once __DIR__ . '/vendor/autoload.php';
 
-$strSQL = "INSERT INTO test (user_id) VALUES ('TEST')";
-$stmt = $dbh->prepare($strSQL);
-$dbh->execute();
-
 $httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient(CHANNEL_ACCESS_TOKEN);
 $bot = new \LINE\LINEBot($httpClient, ['channelSecret' => CHANNEL_SECRET]);
 
