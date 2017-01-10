@@ -68,13 +68,13 @@ foreach ($events as $event) {
 function beginConversation($user_id) {
     global $dbh;
 
-    sendText($user_id, 'working');
     // Duplicate Check
     $strSQL = "SELECT count(*) FROM user WHERE user_id = :user_id";
     $stmt = $dbh->prepare($strSQL);
     $stmt->bindParam(':user_id', $user_id);
     $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        sendText($user_id, 'working');
 
     // Add or update user
     if ($result['count'] > 0) {
