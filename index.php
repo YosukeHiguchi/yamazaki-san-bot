@@ -137,12 +137,20 @@ function inConversation($user_id, $msg) {
 function finishConversation($token) {
     global $dbh;
 
+    $strSQL = "SELECT user_id FROM user WHERE token = :token";
+    $stmt = $dbh->prepare($strSQL);
+    $stmt->bindParam(':token', $token);
+    $stmt->execute();
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
     $strSQL = "UPDATE user SET token = '', waiting_flg = 0 WHERE token = :token";
     $stmt = $dbh->prepare($strSQL);
     $stmt->bindParam(':token', $token);
     $stmt->execute();
 
-    sendText($user_id, '[山崎さんBOT] 会話を終了しました。');
+    foreach ($results as $result) {
+        sendText($result['user_id'], '[山崎さんBOT] 会話を終了しました。');
+    }
 }
 
 function isInConversation($user_id) {
