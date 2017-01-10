@@ -122,9 +122,10 @@ function inConversation($user_id, $msg) {
     global $dbh;
 
     $token = getToken($user_id);
-    $strSQL = "SELECT user_id FROM user WHERE token = :token";
+    $strSQL = "SELECT user_id FROM user WHERE token = :token AND user_id != :user_id";
     $stmt = $dbh->prepare($strSQL);
     $stmt->bindParam(':token', $token);
+    $stmt->bindParam(':user_id', $user_id);
     $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
