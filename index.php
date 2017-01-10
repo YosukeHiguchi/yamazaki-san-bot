@@ -191,7 +191,6 @@ function getWaitingUser($user_id = NULL) {
     }
     $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
-    sendText('Ud13cb22d3933c35428b74fd31c29da35', var_export($result, true));
 
     if ($result === false) {
         return array();
