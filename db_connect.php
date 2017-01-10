@@ -7,14 +7,13 @@ $password = '9m3b58axw6';
 try {
     $dbh = new PDO($dsn, $user, $password);
 } catch (PDOException $e) {
-    echo "test";
     exit;
 }
 
 function addUserId($user_id) {
     global $dbh;
 
-    $strSQL = "INSERT INTO test (user_id) VALUES (:user_id)";
+    $strSQL = "INSERT INTO user (user_id) VALUES (:user_id)";
     $stmt = $dbh->prepare($strSQL);
     $stmt->bindParam(':user_id', $user_id);
     $stmt->execute();
@@ -23,7 +22,7 @@ function addUserId($user_id) {
 function getUserId($id) {
     global $dbh;
 
-    $strSQL = "SELECT user_id FROM test WHERE id = :id";
+    $strSQL = "SELECT user_id FROM user WHERE id = :id";
     $stmt = $dbh->prepare($strSQL);
     $stmt->bindParam(':id', $id);
     $stmt->execute();

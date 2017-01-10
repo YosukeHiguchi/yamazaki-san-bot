@@ -22,7 +22,6 @@ try {
 $textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder('hey whats up');
 $user_id = getUserId($_REQUEST['id']);
 $response = $bot->pushMessage($user_id, $textMessageBuilder);
-var_dump($user_id);var_dump($_REQUEST);
 echo $response->getHTTPStatus() . ' ' . $response->getRawBody();
 
 if (!is_array($events)) {
@@ -33,6 +32,7 @@ foreach ($events as $event) {
     if (!($event instanceof \LINE\LINEBot\Event\MessageEvent)) {
         continue;
     }
+
     if (!($event instanceof \LINE\LINEBot\Event\MessageEvent\TextMessage)) {
         $invalid_type_msg = '現在はテキストしか対応しておりません。';
         $bot->replyText($event->getReplyToken(), $invalid_type_msg);
@@ -45,4 +45,9 @@ foreach ($events as $event) {
     }
 
     $bot->replyText($event->getReplyToken(), $text);
+}
+
+function createToken($length = 16) {
+    $bytes = openssl_random_pseudo_bytes($length);
+    return bin2hex($bytes);
 }
