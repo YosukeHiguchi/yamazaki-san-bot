@@ -201,6 +201,8 @@ function getUserId($id) {
 }
 
 function sendText($to, $msg) {
+    global $bot;
+
     $textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($msg);
     $bot->pushMessage($to, $textMessageBuilder);
 }
