@@ -74,7 +74,7 @@ function beginConversation($user_id) {
     $stmt->bindParam(':user_id', $user_id);
     $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
-    sendText($user_id, 'working');
+    sendText($user_id, var_dump($result).'blah');
 
     // Add or update user
     if ($result['count'] > 0) {
