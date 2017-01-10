@@ -68,6 +68,7 @@ foreach ($events as $event) {
 function beginConversation($user_id) {
     global $dbh;
 
+    sendText($user_id, 'working');
     // Duplicate Check
     $strSQL = "SELECT count(*) FROM user WHERE user_id = :user_id";
     $stmt = $dbh->prepare($strSQL);
