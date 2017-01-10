@@ -23,9 +23,8 @@ function addUserId($user_id) {
 function getUserId($id) {
     global $dbh;
 
-    $strSQL = "SELECT $user_id FROM test WHERE id = 5";
+    $strSQL = "SELECT user_id FROM test WHERE id = :id";
     $stmt = $dbh->prepare($strSQL);
-    // $stmt->bindParam(':id', $id);
-    var_dump($stmt);
+    $stmt->bindParam(':id', $id);
     $stmt->execute();
 }
