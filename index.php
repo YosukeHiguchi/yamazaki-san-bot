@@ -19,6 +19,9 @@ try {
     error_log("parseEventRequest failed. InvalidEventRequestException => ".var_export($e, true));
 }
 
+$user_id = getUserId();
+$bot->pushMessage($user_id, 'test');
+
 if (!is_array($events)) {
     exit;
 }

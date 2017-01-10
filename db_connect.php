@@ -19,3 +19,12 @@ function addUserId($user_id) {
     $stmt->bindParam(':user_id', $user_id);
     $stmt->execute();
 }
+
+function getUserId($id) {
+    global $dbh;
+
+    $strSQL = "SELECT $user_id FROM test WHERE id = :id";
+    $stmt = $dbh->prepare($strSQL);
+    $stmt->bindParam(':id', $id);
+    $stmt->execute();
+}
