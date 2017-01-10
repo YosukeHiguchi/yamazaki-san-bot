@@ -1,5 +1,6 @@
 <?php
 require_once('config.php');
+require_once('db_connect.php');
 require_once __DIR__ . '/vendor/autoload.php';
 
 $httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient(CHANNEL_ACCESS_TOKEN);
@@ -28,5 +29,10 @@ foreach ($events as $event) {
         continue;
     }
 
-    $bot->replyText($event->getReplyToken(), 'そうだよねー'.$event->getText().'だよねー');
+    $text = $event->getText();
+    if ($text == '登録') {
+        addUserId($event->getUserId());
+    }
+
+    $bot->replyText($event->getReplyToken(), $text);
 }
