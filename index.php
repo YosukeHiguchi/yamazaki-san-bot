@@ -60,7 +60,7 @@ foreach ($events as $event) {
             if ($token) {
                 finishConversation($token);
             } else if (isWaiting($user_id)) {
-                cancelWaiting();
+                cancelWaiting($user_id);
                 sendText($user_id, '[山崎さんBOT] 山崎さんと話すのをやめました。');
             } else {
                 sendText($user_id, '[山崎さんBOT] 現在会話をしてませんよ！');
