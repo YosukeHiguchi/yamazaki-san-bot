@@ -19,6 +19,10 @@ try {
     error_log("parseEventRequest failed. InvalidEventRequestException => ".var_export($e, true));
 }
 
+if (!is_array($events)) {
+    exit;
+}
+
 foreach ($events as $event) {
     if (!($event instanceof \LINE\LINEBot\Event\MessageEvent)) {
         continue;
