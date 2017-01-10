@@ -49,7 +49,11 @@ foreach ($events as $event) {
 
     switch ($text) {
         case '山崎さんと話す':
-            beginConversation($user_id);
+            if (isInConversation($user_id)) {
+                sendText($user_id, '[山崎さんBOT] 山崎さんと会話中です。');
+            } else {
+                beginConversation($user_id);
+            }
             break;
         case '山崎さんと話すのをやめる':
             finishConversation();
