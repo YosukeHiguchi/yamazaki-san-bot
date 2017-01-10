@@ -23,6 +23,8 @@ foreach ($events as $event) {
         continue;
     }
     if (!($event instanceof \LINE\LINEBot\Event\MessageEvent\TextMessage)) {
+        $invalid_type_msg = '現在はテキストしか対応しておりません。';
+        $bot->replyText($event->getReplyToken(), $invalid_type_msg);
         continue;
     }
 
