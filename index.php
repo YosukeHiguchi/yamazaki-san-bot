@@ -31,7 +31,6 @@ foreach ($events as $event) {
 
     $text = $event->getText();
     if ($text == '登録') {
-        $bot->replyText($event->getReplyToken(), $event->getUserId());
         addUserId($event->getUserId());
     }
 
