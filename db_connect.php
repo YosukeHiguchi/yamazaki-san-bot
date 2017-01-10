@@ -11,6 +11,8 @@ try {
 }
 
 function addUserId($user_id) {
+    global $dbh;
+
     $strSQL = "INSERT INTO test (user_id) VALUES (?)";
     $stmt = $dbh->prepare($strSQL);
     $dbh->execute(array($user_id));
