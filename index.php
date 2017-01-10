@@ -4,7 +4,6 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 $httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient(CHANNEL_ACCESS_TOKEN);
 $bot = new \LINE\LINEBot($httpClient, ['channelSecret' => CHANNEL_SECRET]);
-var_dump(CHANNEL_ACCESS_TOKEN);
 
 $signature = $_SERVER["HTTP_" . \LINE\LINEBot\Constant\HTTPHeader::LINE_SIGNATURE];
 try {
