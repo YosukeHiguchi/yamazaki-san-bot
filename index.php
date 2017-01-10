@@ -23,6 +23,7 @@ $textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder('hey w
 $user_id = getUserId($_REQUEST['id']);
 $bot->pushMessage($user_id, $textMessageBuilder);
 var_dump($user_id);var_dump($_REQUEST);
+echo $response->getHTTPStatus() . ' ' . $response->getRawBody();
 
 if (!is_array($events)) {
     exit;
