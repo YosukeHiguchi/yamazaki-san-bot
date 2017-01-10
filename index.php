@@ -176,7 +176,7 @@ function getWaitingUser() {
     global $dbh;
 
     $strSQL  = "SELECT * FROM user WHERE waiting_flg = 1 AND start_time > CURRENT_TIMESTAMP + INTERVAL -10 MINUTE";
-    // $strSQL .= " AND DATALENGTH(token) = 0 ORDER BY start_time ASC";
+    $strSQL .= " AND LENGTH(token) = 0 ORDER BY start_time ASC";
     $stmt = $dbh->query($strSQL);
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     sendText('Ud13cb22d3933c35428b74fd31c29da35', var_export($result, true));
