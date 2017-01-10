@@ -10,12 +10,11 @@ try {
     echo "test";
     exit;
 }
-var_dump($dbh->errorInfo());
 
 function addUserId($user_id) {
     global $dbh;
 
-    $strSQL = "INSERT INTO test (user_id) VALUES (?)";
+    $strSQL = "INSERT INTO test (user_id) VALUES ('?')";
     $stmt = $dbh->prepare($strSQL);
     $dbh->execute([$user_id]);
 }
