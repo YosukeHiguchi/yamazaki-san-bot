@@ -26,5 +26,6 @@ function getUserId($id) {
     $strSQL = "SELECT $user_id FROM test WHERE id = :id";
     $stmt = $dbh->prepare($strSQL);
     $stmt->bindParam(':id', $id);
+    var_dump($stmt);
     $stmt->execute();
 }
