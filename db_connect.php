@@ -7,6 +7,7 @@ $password = '9m3b58axw6';
 try {
     $dbh = new PDO($dsn, $user, $password);
 } catch (PDOException $e) {
+    echo "test";
     exit;
 }
 
