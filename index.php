@@ -166,6 +166,7 @@ function isInConversation($user_id) {
 
     $strSQL = 'SELECT token FROM user WHERE user_id = :user_id';
     $stmt = $dbh->prepare($strSQL);
+    $stmt->bindParam(':user_id', $user_id);
     $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
