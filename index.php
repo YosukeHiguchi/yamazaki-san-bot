@@ -2,6 +2,10 @@
 require_once('config.php');
 require_once __DIR__ . '/vendor/autoload.php';
 
+use LINE\LINEBot\TemplateActionBuilder\PostbackTemplateActionBuilder;
+use LINE\LINEBot\MessageBuilder\TemplateBuilder\ConfirmTemplateBuilder;
+use LINE\LINEBot\MessageBuilder\TemplateMessageBuilder;
+
 $httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient(CHANNEL_ACCESS_TOKEN);
 $bot = new \LINE\LINEBot($httpClient, ['channelSecret' => CHANNEL_SECRET]);
 
