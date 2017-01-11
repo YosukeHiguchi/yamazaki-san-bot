@@ -298,7 +298,7 @@ function writeLog($from_id, $to_id, $token, $msg) {
     if ($result === false) {
         return;
     }
-
+    $msg = str_replace(array("\r\n", "\r", "\n"), '\n', $msg);
     $content_mod = "\n[".date('Y-m-d H:i:s').'] <'.$from_name.'> '.$msg;
     $strSQL = "UPDATE log SET content = CONCAT(content, :content) WHERE token = :token";
     $stmt = $dbh->prepare($strSQL);
