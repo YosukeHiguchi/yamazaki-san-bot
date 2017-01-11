@@ -70,7 +70,7 @@ foreach ($events as $event) {
                 $yes_post = new PostbackTemplateActionBuilder("はい", "post_bgn_yes");
                 $no_post = new PostbackTemplateActionBuilder("いいえ", "post_bgn_no");
                 $confirm = new ConfirmTemplateBuilder("[山崎さんBOT] 山崎さんと話し始めますか？", [$yes_post, $no_post]);
-                $confirm_message = new TemplateMessageBuilder("confirm_begin", $confirm);
+                $confirm_message = new TemplateMessageBuilder("[山崎さんBOT] 山崎さんと話し始めますか？", $confirm);
                 $bot->replyMessage($event->getReplyToken(), $confirm_message);
             }
             break;
