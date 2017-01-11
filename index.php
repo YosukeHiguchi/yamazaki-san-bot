@@ -115,6 +115,7 @@ function beginConversation($user_id) {
         $msg = '[山崎さんBOT] 山崎さんと繋がりました！';
         sendText($waiting_user['user_id'], $msg);
         sendText($user_id, $msg);
+        writeLog($user_id, $waiting_user['user_id'], $token, 'Conversation Beginned');
     } else {
         $msg = '[山崎さんBOT] 山崎さんを検索中。検索は10分後に自動的にオフになります。';
         sendText($user_id, $msg);
@@ -140,6 +141,7 @@ function inConversation($user_id, $msg) {
 
     $dest_user_id = $result['user_id'];
     sendText($dest_user_id, $msg);
+    writeLog($user_id, $dest_user_id, $token, $msg);
 }
 
 function finishConversation($token) {
@@ -160,6 +162,7 @@ function finishConversation($token) {
     $stmt->bindParam(':token', $token);
     $stmt->execute();
 
+    // Assign end_time to log table
     $strSQL = "UPDATE log SET end_time = CURRENT_TIMESTAMP, WHERE token = :token";
     $stmt = $dbh->prepare($strSQL);
     $stmt->bindParam(':token', $token);
