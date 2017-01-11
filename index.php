@@ -163,8 +163,8 @@ function finishConversation($token) {
     $stmt->execute();
 
     // Assign end_time to log table
-    $content_mod = '['.date('Y-m-d H:i:s').'] ----- Conversation Finished -----';
-    $strSQL = "UPDATE log SET content = :content, end_time = CURRENT_TIMESTAMP WHERE token = :token";
+    $content_mod = "\n[".date('Y-m-d H:i:s').'] ----- Conversation Finished -----';
+    $strSQL = "UPDATE log SET content = CONCAT(content, :content), end_time = CURRENT_TIMESTAMP WHERE token = :token";
     $stmt = $dbh->prepare($strSQL);
     $stmt->bindParam(':content', $content_mod);
     $stmt->bindParam(':token', $token);
