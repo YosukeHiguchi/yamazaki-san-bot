@@ -154,7 +154,7 @@ function inConversation($user_id, $msg) {
 
     if ($result === false) {
         $errmsg = '[山崎さんBOT] エラーが発生しました。';
-        $bot->replyText($bot->getReplyToken(), $errmsg);
+        sendText($user_id, $errmsg);
         finishConversation($token);
         return;
     }
