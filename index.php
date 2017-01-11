@@ -71,7 +71,7 @@ foreach ($events as $event) {
                 $no_post = new PostbackTemplateActionBuilder("いいえ", "post_bgn_no");
                 $confirm = new ConfirmTemplateBuilder("[山崎さんBOT] 山崎さんと話し始めますか？", [$yes_post, $no_post]);
                 $confirm_message = new TemplateMessageBuilder("confirm_begin", $confirm);
-                $bot->replyText($event->getReplyToken(), $confirm_message);
+                $bot->replyMessage($event->getReplyToken(), $confirm_message);
             }
             break;
         case '山崎さんと話すのをやめる':
