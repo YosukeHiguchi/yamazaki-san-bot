@@ -70,9 +70,8 @@ foreach ($events as $event) {
                 $yes_post = new PostbackTemplateActionBuilder("はい", "post_bgn_yes");
                 $no_post = new PostbackTemplateActionBuilder("いいえ", "post_bgn_no");
                 $confirm = new ConfirmTemplateBuilder("[山崎さんBOT] 山崎さんと話し始めますか？", [$yes_post, $no_post]);
-                $bot->replyText($event->getReplyToken(), 'debug');
                 $confirm_message = new TemplateMessageBuilder("confirm_begin", $confirm);
-                $bot->replyMessage($event->getReplyToken(), $confirm_message);
+                $bot->replyText($event->getReplyToken(), $confirm_message);
             }
             break;
         case '山崎さんと話すのをやめる':
@@ -81,16 +80,16 @@ foreach ($events as $event) {
                 finishConversation($token);
             } else if (isWaiting($user_id)) {
                 cancelWaiting($user_id);
-                $event->replyMessage($event->getReplyToken(), '[山崎さんBOT] 山崎さんと話すのをやめました。');
+                $event->replyText($event->getReplyToken(), '[山崎さんBOT] 山崎さんと話すのをやめました。');
             } else {
-                $event->replyMessage($event->getReplyToken(), '[山崎さんBOT] 現在会話をしてませんよ！');
+                $event->replyText($event->getReplyToken(), '[山崎さんBOT] 現在会話をしてませんよ！');
             }
             break;
         default:
             if (isInConversation($user_id)) {
                 inConversation($user_id, $text);
             } else {
-                $event->replyMessage($event->getReplyToken(), '[山崎さんBOT] 山崎さんと会話をするには、「山崎さんと話す」と送信して下さい！');
+                $event->replyText($event->getReplyToken(), '[山崎さんBOT] 山崎さんと会話をするには、「山崎さんと話す」と送信して下さい！');
             }
             break;
     }
