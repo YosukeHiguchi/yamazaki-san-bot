@@ -38,6 +38,7 @@ foreach ($events as $event) {
     $user_id = $event->getUserId();
 
     if ($event instanceof \LINE\LINEBot\Event\PostbackEvent) {
+        $bot->replyText($event->getReplyToken(), 'debug');
         $response = $event->getPostbackData();
         if ($response == 'post_bgn_yes') {
             beginConversation($user_id);
