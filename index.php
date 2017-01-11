@@ -50,7 +50,7 @@ foreach ($events as $event) {
     switch ($text) {
         case '山崎さんと話す':
             if (isInConversation($user_id)) {
-                sendText($user_id, '[山崎さんBOT] 山崎さんと会話中ですよ！');
+                $bot->replyText($event->getReplyToken(), '[山崎さんBOT] 山崎さんと会話中ですよ！');
             } else {
                 beginConversation($user_id);
             }
@@ -61,16 +61,16 @@ foreach ($events as $event) {
                 finishConversation($token);
             } else if (isWaiting($user_id)) {
                 cancelWaiting($user_id);
-                sendText($user_id, '[山崎さんBOT] 山崎さんと話すのをやめました。');
+                $bot->replyText($event->getReplyToken(), '[山崎さんBOT] 山崎さんと話すのをやめました。');
             } else {
-                sendText($user_id, '[山崎さんBOT] 現在会話をしてませんよ！');
+                $bot->replyText($event->getReplyToken(), '[山崎さんBOT] 現在会話をしてませんよ！');
             }
             break;
         default:
             if (isInConversation($user_id)) {
                 inConversation($user_id, $text);
             } else {
-                sendText($user_id, '[山崎さんBOT] 山崎さんと会話をするには、「山崎さんと話す」と送信して下さい！');
+                $bot->replyText($event->getReplyToken(), '[山崎さんBOT] 山崎さんと会話をするには、「山崎さんと話す」と送信して下さい！');
             }
             break;
     }
@@ -138,6 +138,12 @@ function beginConversation($user_id) {
 function inConversation($user_id, $msg) {
     global $dbh;
 
+    $errmsg = msgValidationCheck($msg);
+    if ($errmsg != '') {
+        sendText($user_id, $errmsg);
+        return;
+    }
+
     $token = getToken($user_id);
     $strSQL = "SELECT user_id FROM user WHERE token = :token AND user_id != :user_id";
     $stmt = $dbh->prepare($strSQL);
@@ -147,7 +153,8 @@ function inConversation($user_id, $msg) {
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($result === false) {
-        sendText($user_id, '[山崎さんBOT] エラーが発生しました。');
+        $errmsg = '[山崎さんBOT] エラーが発生しました。';
+        $bot->replyText($bot->getReplyToken(), $errmsg);
         finishConversation($token);
         return;
     }
@@ -202,6 +209,16 @@ function isInConversation($user_id) {
     }
 
     return false;
+}
+
+function msgValidationCheck($msg) {
+    $errmsg = '';
+
+    if (strpos($msg, '[山崎さんBOT]') !== false) {
+        $errmsg = '[山崎さんBOT] 送信文中に"[山崎さんBOT]"は含めません。';
+    }
+
+    return $errmsg;
 }
 
 function getToken($user_id) {
