@@ -160,6 +160,11 @@ function finishConversation($token) {
     $stmt->bindParam(':token', $token);
     $stmt->execute();
 
+    $strSQL = "UPDATE log SET end_time = CURRENT_TIMESTAMP, WHERE token = :token";
+    $stmt = $dbh->prepare($strSQL);
+    $stmt->bindParam(':token', $token);
+    $stmt->execute();
+
     foreach ($results as $result) {
         sendText($result['user_id'], '[山崎さんBOT] 会話を終了しました！');
     }
@@ -259,4 +264,48 @@ function sendText($to, $msg) {
 function createToken($length = 16) {
     $bytes = openssl_random_pseudo_bytes($length);
     return bin2hex($bytes);
+}
+
+function writeLog($from_id, $to_id, $token, $msg) {
+    global $bot, $dbh;
+
+    $from_name = getNameFromUserId($from_id);
+    $to_name   = getNameFromUserId($to_id);
+
+    $strSQL = "SELECT * FROM log WHERE token = :token";
+    $stmt = $dbh->prepare($strSQL);
+    $stmt->bindParam(':token', $token);
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    $content_mod = '['.date('Y-m-d H:i:s').' '.$from_name.'] '.$msg;
+
+    if ($result === false) {
+        $strSQL  = "INSERT INTO log (token, user1_id, user2_id, user1_name, user2_name, content, start_time)";
+        $strSQL .= " VALUES (:token, :user1_id, :user2_id, :user1_name, :user2_name, :content, CURRENT_TIMESTAMP)";
+        $stmt = $dbh->prepare($strSQL);
+        $stmt->bindParam(':token', $token);
+        $stmt->bindParam(':user1_id', $from_id);
+        $stmt->bindParam(':user2_id', $to_id);
+        $stmt->bindParam(':user1_name', $from_name);
+        $stmt->bindParam(':user2_name', $to_name);
+        $stmt->bindParam(':content', $content_mod);
+        $stmt->execute();
+    } else {
+        $content_mod = $result['content']."\n".$content_mod;
+        $strSQL = "UPDATE log SET content = :content WHERE token = :token";
+        $stmt = $dbh->prepare($strSQL);
+        $stmt->bindParam(':content', $content_mod);
+        $stmt->bindParam(':token', $token);
+        $stmt->execute();
+    }
+}
+
+function getNameFromUserId($user_id) {
+    global $bot;
+
+    $response = $bot->getProfile($user_id);
+    $profile = $response->getJsonDecodedBody();
+
+    return $profile['displayName'];
 }
