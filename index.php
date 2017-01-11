@@ -115,7 +115,20 @@ function beginConversation($user_id) {
         $msg = '[山崎さんBOT] 山崎さんと繋がりました！';
         sendText($waiting_user['user_id'], $msg);
         sendText($user_id, $msg);
-        writeLog($user_id, $waiting_user['user_id'], $token, '----- Conversation Beginned -----');
+
+        // Write to log
+        $content_mod = "[".date('Y-m-d H:i:s').'] ----- Conversation Beginned -----';
+        $strSQL  = "INSERT INTO log (token, user1_id, user2_id, user1_name, user2_name, content, start_time)";
+        $strSQL .= " VALUES (:token, :user1_id, :user2_id, :user1_name, :user2_name, :content, CURRENT_TIMESTAMP)";
+        $stmt = $dbh->prepare($strSQL);
+        $stmt->bindParam(':token', $token);
+        $stmt->bindParam(':user1_id', $user_id);
+        $stmt->bindParam(':user2_id', $waiting_user['user_id']);
+        $stmt->bindParam(':user1_name', getNameFromUserId($user_id));
+        $stmt->bindParam(':user2_name', getNameFromUserId($waiting_user['user_id']));
+        $stmt->bindParam(':content', $content_mod);
+
+        $stmt->execute();
     } else {
         $msg = '[山崎さんBOT] 山崎さんを検索中。検索は10分後に自動的にオフになります。';
         sendText($user_id, $msg);
@@ -275,7 +288,6 @@ function writeLog($from_id, $to_id, $token, $msg) {
     global $bot, $dbh;
 
     $from_name = getNameFromUserId($from_id);
-    $to_name   = getNameFromUserId($to_id);
 
     $strSQL = "SELECT * FROM log WHERE token = :token";
     $stmt = $dbh->prepare($strSQL);
@@ -283,27 +295,16 @@ function writeLog($from_id, $to_id, $token, $msg) {
     $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    $content_mod = '['.date('Y-m-d H:i:s').' '.$from_name.'] '.$msg;
-
     if ($result === false) {
-        $strSQL  = "INSERT INTO log (token, user1_id, user2_id, user1_name, user2_name, content, start_time)";
-        $strSQL .= " VALUES (:token, :user1_id, :user2_id, :user1_name, :user2_name, :content, CURRENT_TIMESTAMP)";
-        $stmt = $dbh->prepare($strSQL);
-        $stmt->bindParam(':token', $token);
-        $stmt->bindParam(':user1_id', $from_id);
-        $stmt->bindParam(':user2_id', $to_id);
-        $stmt->bindParam(':user1_name', $from_name);
-        $stmt->bindParam(':user2_name', $to_name);
-        $stmt->bindParam(':content', $content_mod);
-        $stmt->execute();
-    } else {
-        $content_mod = $result['content']."\n".$content_mod;
-        $strSQL = "UPDATE log SET content = :content WHERE token = :token";
-        $stmt = $dbh->prepare($strSQL);
-        $stmt->bindParam(':content', $content_mod);
-        $stmt->bindParam(':token', $token);
-        $stmt->execute();
+        return;
     }
+
+    $content_mod = "\n[".date('Y-m-d H:i:s').'] <'.$from_name.'> '.$msg;
+    $strSQL = "UPDATE log SET content = CONCAT(content, :content) WHERE token = :token";
+    $stmt = $dbh->prepare($strSQL);
+    $stmt->bindParam(':content', $content_mod);
+    $stmt->bindParam(':token', $token);
+    $stmt->execute();
 }
 
 function getNameFromUserId($user_id) {
