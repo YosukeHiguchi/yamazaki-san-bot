@@ -38,7 +38,6 @@ foreach ($events as $event) {
     $user_id = $event->getUserId();
 
     if ($event instanceof \LINE\LINEBot\Event\PostbackEvent) {
-        $bot->replyText($event->getReplyToken(), 'debug');
         $response = $event->getPostbackData();
         if ($response == 'post_bgn_yes') {
             beginConversation($user_id);
@@ -64,6 +63,7 @@ foreach ($events as $event) {
             if (isInConversation($user_id)) {
                 $bot->replyText($event->getReplyToken(), '[山崎さんBOT] 山崎さんと会話中ですよ！');
             } else {
+                $bot->replyText($event->getReplyToken(), 'debug');
                 $yes_post = new PostbackTemplateActionBuilder("はい", "post_bgn_yes");
                 $no_post = new PostbackTemplateActionBuilder("いいえ", "post_bgn_no");
                 $confirm = new ConfirmTemplateBuilder("[山崎さんBOT] 山崎さんと話し始めますか？", [$yes_post, $no_post]);
