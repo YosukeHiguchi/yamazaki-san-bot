@@ -34,6 +34,20 @@ if (!is_array($events)) {
 }
 
 foreach ($events as $event) {
+    $text = $event->getText();
+    $user_id = $event->getUserId();
+
+    if ($event instanceof \LINE\LINEBot\Event\PostbackEvent) {
+        $response = $event->getPostbackData();
+        if ($response == 'post_bgn_yes') {
+            beginConversation($user_id);
+        } else if ($response == 'post_bgn_no') {
+            $bot->replyText($event->getReplyToken(), '[山崎さんBOT] 山崎さんと話すのをやめました。');
+        }
+
+        continue;
+    }
+
     if (!($event instanceof \LINE\LINEBot\Event\MessageEvent)) {
         continue;
     }
@@ -44,15 +58,16 @@ foreach ($events as $event) {
         continue;
     }
 
-    $text = $event->getText();
-    $user_id = $event->getUserId();
-
     switch ($text) {
         case '山崎さんと話す':
             if (isInConversation($user_id)) {
-                sendText($user_id, '[山崎さんBOT] 山崎さんと会話中ですよ！');
+                $bot->replyText($event->getReplyToken(), '[山崎さんBOT] 山崎さんと会話中ですよ！');
             } else {
-                beginConversation($user_id);
+                $yes_post = new PostbackTemplateActionBuilder("はい", "post_bgn_yes");
+                $no_post = new PostbackTemplateActionBuilder("いいえ", "post_bgn_no");
+                $confirm = new ConfirmTemplateBuilder("[山崎さんBOT] 山崎さんと話し始めますか？", [$yes_post, $no_post]);
+                $confirm_message = new TemplateMessageBuilder("confirm_begin", $confirm);
+                $bot->replyMessage($event->getReplyToken(), $message);
             }
             break;
         case '山崎さんと話すのをやめる':
@@ -61,16 +76,16 @@ foreach ($events as $event) {
                 finishConversation($token);
             } else if (isWaiting($user_id)) {
                 cancelWaiting($user_id);
-                sendText($user_id, '[山崎さんBOT] 山崎さんと話すのをやめました。');
+                $event->replyMessage($event->getReplyToken(), '[山崎さんBOT] 山崎さんと話すのをやめました。');
             } else {
-                sendText($user_id, '[山崎さんBOT] 現在会話をしてませんよ！');
+                $event->replyMessage($event->getReplyToken(), '[山崎さんBOT] 現在会話をしてませんよ！');
             }
             break;
         default:
             if (isInConversation($user_id)) {
                 inConversation($user_id, $text);
             } else {
-                sendText($user_id, '[山崎さんBOT] 山崎さんと会話をするには、「山崎さんと話す」と送信して下さい！');
+                $event->replyMessage($event->getReplyToken(), '[山崎さんBOT] 山崎さんと会話をするには、「山崎さんと話す」と送信して下さい！');
             }
             break;
     }
@@ -298,6 +313,7 @@ function writeLog($from_id, $to_id, $token, $msg) {
     if ($result === false) {
         return;
     }
+
     $msg = str_replace(array("\r\n", "\r", "\n"), '\n', $msg);
     $content_mod = "\n[".date('Y-m-d H:i:s').'] <'.$from_name.'> '.$msg;
     $strSQL = "UPDATE log SET content = CONCAT(content, :content) WHERE token = :token";
