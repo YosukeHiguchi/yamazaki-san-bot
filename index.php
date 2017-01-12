@@ -34,7 +34,10 @@ if (!is_array($events)) {
 }
 
 foreach ($events as $event) {
-    if (!($event instanceof \LINE\LINEBot\Event\MessageEvent)) {
+    if ($event instanceof \LINE\LINEBot\Event\BeaconDetectionEvent) {
+        $bot->replyText($event->getReplyToken(), '山崎さんが・・・来るぅううううううう！');
+        continue;
+    } else if (!($event instanceof \LINE\LINEBot\Event\MessageEvent)) {
         continue;
     }
 
