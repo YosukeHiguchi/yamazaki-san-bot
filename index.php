@@ -246,8 +246,8 @@ function getToken($user_id) {
 function getWaitingUser($user_id = NULL) {
     global $dbh;
 
-    $strSQL  = "SELECT * FROM user WHERE waiting_flg = 1 AND start_time + INTERVAL +10 MINUTE > CURRENT_TIMESTAMP";
-    $strSQL .= " AND start_time + INTERVAL +10 SECOND < CURRENT_TIMESTAMP AND (token = '' OR token IS NULL)";
+    $strSQL  = "SELECT * FROM user WHERE waiting_flg = 1 AND start_time > CURRENT_TIMESTAMP + INTERVAL -10 MINUTE";
+    $strSQL .= " AND (token = '' OR token IS NULL)";
     if (!is_null($user_id)) {
         $strSQL .= " AND user_id != :user_id ";
     }
