@@ -6,3 +6,6 @@ define('CHANNEL_SECRET', 'secret');
 define('DB_DSN', 'dsn');
 define('DB_USERNAME', 'username');
 define('DB_PASSWORD', 'password');
+
+define('ROOT_DIR', __DIR__);
+define('DEBUG_DIR', ROOT_DIR.'/debug/');

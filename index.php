@@ -10,13 +10,13 @@ $signature = $_SERVER["HTTP_" . \LINE\LINEBot\Constant\HTTPHeader::LINE_SIGNATUR
 try {
     $events = $bot->parseEventRequest(file_get_contents('php://input'), $signature);
 } catch(\LINE\LINEBot\Exception\InvalidSignatureException $e) {
-    error_log("parseEventRequest failed. InvalidSignatureException => ".var_export($e, true));
+    writeDebugLog("parseEventRequest failed. InvalidSignatureException => ".var_export($e, true));
 } catch(\LINE\LINEBot\Exception\UnknownEventTypeException $e) {
-    error_log("parseEventRequest failed. UnknownEventTypeException => ".var_export($e, true));
+    writeDebugLog("parseEventRequest failed. UnknownEventTypeException => ".var_export($e, true));
 } catch(\LINE\LINEBot\Exception\UnknownMessageTypeException $e) {
-    error_log("parseEventRequest failed. UnknownMessageTypeException => ".var_export($e, true));
+    writeDebugLog("parseEventRequest failed. UnknownMessageTypeException => ".var_export($e, true));
 } catch(\LINE\LINEBot\Exception\InvalidEventRequestException $e) {
-    error_log("parseEventRequest failed. InvalidEventRequestException => ".var_export($e, true));
+    writeDebugLog("parseEventRequest failed. InvalidEventRequestException => ".var_export($e, true));
 }
 
 // Begin PDO
@@ -37,7 +37,8 @@ foreach ($events as $event) {
     if ($event instanceof \LINE\LINEBot\Event\BeaconDetectionEvent) {
         $bot->replyText($event->getReplyToken(), '山崎さんが・・・来るぅううううううう！');
         continue;
-    } else if (!($event instanceof \LINE\LINEBot\Event\MessageEvent)) {
+    }
+    if (!($event instanceof \LINE\LINEBot\Event\MessageEvent)) {
         continue;
     }
 
@@ -334,4 +335,12 @@ function getNameFromUserId($user_id) {
     $profile = $response->getJsonDecodedBody();
 
     return $profile['displayName'];
+}
+
+function writeDebugLog($msg = '') {
+    if ($msg == '') {
+        return;
+    }
+    $filepath = DEBUG_DIR.date('YmdHis').'.php';
+    error_log($msg, 3, $filepath);
 }
