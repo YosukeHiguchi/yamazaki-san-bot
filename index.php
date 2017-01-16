@@ -342,5 +342,5 @@ function writeDebugLog($msg = '') {
         return;
     }
     $filepath = DEBUG_DIR.date('Ymd').'.log';
-    error_log(date('[Y-m-d H:i:s] '.$msg.'\n', 3, $filepath);
+    error_log(date('[Y-m-d H:i:s] ').$msg.'\n', 3, $filepath);
 }
