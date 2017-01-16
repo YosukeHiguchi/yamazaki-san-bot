@@ -1,7 +1,6 @@
 <?php
 require_once('config.php');
 require_once __DIR__ . '/vendor/autoload.php';
-writeDebugLog('Blah');
 
 $httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient(CHANNEL_ACCESS_TOKEN);
 $bot = new \LINE\LINEBot($httpClient, ['channelSecret' => CHANNEL_SECRET]);
@@ -342,6 +341,6 @@ function writeDebugLog($msg = '') {
     if ($msg == '') {
         return;
     }
-    $filepath = DEBUG_DIR.date('YmdHis').'.php';
-    error_log($msg, 3, $filepath);
+    $filepath = DEBUG_DIR.date('Ymd').'.log';
+    error_log(date('[Y-m-d H:i:s] '.$msg.'\n', 3, $filepath);
 }
