@@ -70,6 +70,10 @@ foreach ($events as $event) {
                 $bot->replyText($event->getReplyToken(), '[山崎さんBOT] 現在会話をしてませんよ！');
             }
             break;
+        case 'ヘルプ':
+        case '山崎さんって何':
+            $bot->replyText($event->getReplyToken(), getHelpMsg());
+            break;
         default:
             if (isInConversation($user_id)) {
                 inConversation($user_id, $text);
@@ -78,6 +82,25 @@ foreach ($events as $event) {
             }
             break;
     }
+}
+
+function getHelpMsg() {
+    $msg = <<<EOL
+山崎さんへようこそ！
+山崎さんBOTは、あなたがLINEで誰かとお話したい時、相手になってくれる人を探すお手伝いをします！
+山崎さんを使うには、以下のようなテキストを送って下さい。
+
+"山崎さんと話す": 他の山崎さんを検索している人と繋がります。山崎さんと繋がったら、話しかけてあげて下さい。
+"山崎さんと話すのをやめる": 山崎さんとの接続を切断します。一度切断したら同じ人と話せなくなるので注意して下さい！
+"山崎さんって何"/"ヘルプ": このヘルプを表示します。
+
+山崎さんは毎回ランダムな人と接続されます！
+相手は人なので、誹謗中傷はやめて下さい。 
+また、一度切断したら、その人と連絡を取ることが一切できなくなります。
+それでは、山崎さんとの会話をお楽しみ下さい＼(^o^)／
+EOL;
+
+    return $msg;
 }
 
 function beginConversation($user_id) {
