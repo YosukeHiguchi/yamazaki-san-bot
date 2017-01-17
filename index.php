@@ -73,7 +73,11 @@ foreach ($events as $event) {
         case 'ヘルプ':
         case '山崎さんって何？':
         case '山崎さんって何?':
-            $bot->replyText($event->getReplyToken(), getHelpMsg());
+            if (isInConversation($user_id)) {
+                $bot->replyText($event->getReplyToken(), '[山崎さんBOT] 山崎さんとの接続中にヘルプは見られません！山崎さんと話すのをやめてから、もう一度お試しください。');
+            } else {
+                $bot->replyText($event->getReplyToken(), getHelpMsg());
+            }
             break;
         default:
             if (isInConversation($user_id)) {
